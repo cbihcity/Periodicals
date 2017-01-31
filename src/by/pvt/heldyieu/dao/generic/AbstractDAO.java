@@ -6,11 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
-
 import org.apache.log4j.Logger;
-
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
-
 import by.pvt.heldyieu.dao.connection.ConnectionFactory;
 import by.pvt.heldyieu.interfaces.Constants;
 import by.pvt.heldyieu.interfaces.GenericDAO;
@@ -18,7 +15,7 @@ import by.pvt.heldyieu.interfaces.Identified;
 import by.pvt.heldyieu.resources.ResourceManager;
 
 
-public abstract class AbstractDAO <T extends Identified, PK extends Integer> implements GenericDAO<T, PK>, Constants{
+public abstract class AbstractDAO <T extends Identified, PK extends Number> implements GenericDAO<T, PK>, Constants{
 	private static final Logger LOGGER = Logger.getLogger(AbstractDAO.class);
 	protected Connection connect;
 	protected ResourceManager resmanager;
@@ -78,12 +75,13 @@ public abstract class AbstractDAO <T extends Identified, PK extends Integer> imp
     }
 
     @Override
-    public T getByPK(Integer key) throws SQLException {
+    public T getByPK(Number key) throws SQLException {
     	LOGGER.info("Find object by id and return it");
+    	
         T tempEntity = null;
         ResultSet rs = null;
         try (PreparedStatement statement = connect.prepareStatement(getSelectQuery()+" WHERE id = ?")) {
-            statement.setInt(1, key);
+            statement.setInt(1, (Integer)key);
             rs = statement.executeQuery();
             tempEntity = parseResultSet(rs);
         } catch (Exception e) {
