@@ -4,8 +4,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
+
 import org.apache.log4j.Logger;
+
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
+
 import by.pvt.heldyieu.dao.connection.ConnectionFactory;
 import by.pvt.heldyieu.interfaces.GenericDAO;
 import by.pvt.heldyieu.interfaces.Identified;
@@ -20,8 +25,7 @@ public abstract class AbstractDAO <T extends Identified, PK extends Integer> imp
 	public AbstractDAO(String resource) {
         try {
 			connect = ConnectionFactory.getInstance().getConnection();
-			new ResourceManager();
-			resmanager = ResourceManager.getInstance(resource);
+			resmanager = new ResourceManager(resource);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -36,7 +40,7 @@ public abstract class AbstractDAO <T extends Identified, PK extends Integer> imp
 
     public abstract String getDeleteQuery();
 
-    protected abstract T parseResultSet(ResultSet rs, T Object) throws SQLException;
+    protected abstract T parseResultSet(ResultSet rs) throws SQLException;
     
     protected abstract List<T> parseResultSetList(ResultSet rs) throws SQLException;
 
@@ -47,8 +51,7 @@ public abstract class AbstractDAO <T extends Identified, PK extends Integer> imp
     @Override
     public T create(T object) throws SQLException {
         LOGGER.info("Try to create new user in USER database");
-        String sql = getCreateQuery();
-        try (PreparedStatement statement = connect.prepareStatement(sql)) {
+        try (PreparedStatement statement = connect.prepareStatement(getCreateQuery(), Statement.RETURN_GENERATED_KEYS)) {
             prepareStatementForInsert(statement, object);
             int count = statement.executeUpdate();
             if (count != 1) {
@@ -56,18 +59,20 @@ public abstract class AbstractDAO <T extends Identified, PK extends Integer> imp
                 throw new SQLException("On persist modify more then 1 record: " + count);
             } else {
 				LOGGER.info("User creation successful");
-
 				try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
 					if (generatedKeys.next()) {
 						object.setId(generatedKeys.getInt(1));
 					}
-					object = parseResultSet(generatedKeys, object);					
+					else {
+						LOGGER.error("Failed to create user, no ID obtained.");
+					}
+				}					
 				}
+			} catch (MySQLIntegrityConstraintViolationException e) {
+				LOGGER.info(e.getMessage());
+				System.out.println("Duplicate entry 'cbihcity@gmail.com' for key 'email_UNIQUE'");
 			}
-        } catch (Exception e) {
-        	LOGGER.info(e.getMessage());
-            throw new SQLException(e);
-        }
+        
         return object;
     }
 
@@ -75,12 +80,10 @@ public abstract class AbstractDAO <T extends Identified, PK extends Integer> imp
     public T getByPK(Integer key) throws SQLException {
     	LOGGER.info("Find object by id and return it");
         T tempEntity = null;
-        String sql = getSelectQuery();
-        sql += " WHERE id = ?";
-        try (PreparedStatement statement = connect.prepareStatement(sql)) {
+        try (PreparedStatement statement = connect.prepareStatement(getSelectQuery()+" WHERE id = ?")) {
             statement.setInt(1, key);
             ResultSet rs = statement.executeQuery();
-            tempEntity = parseResultSet(rs, tempEntity);
+            tempEntity = parseResultSet(rs);
         } catch (Exception e) {
             throw new SQLException(e);
         }
@@ -93,8 +96,7 @@ public abstract class AbstractDAO <T extends Identified, PK extends Integer> imp
 
     @Override
     public void update(T object) throws SQLException {
-        String sql = getUpdateQuery();
-        try (PreparedStatement statement = connect.prepareStatement(sql);) {
+        try (PreparedStatement statement = connect.prepareStatement(getUpdateQuery());) {
             prepareStatementForUpdate(statement, object); // заполнение аргументов запроса оставим на совесть потомков
             int count = statement.executeUpdate();
             if (count != 1) {
@@ -107,8 +109,7 @@ public abstract class AbstractDAO <T extends Identified, PK extends Integer> imp
 
     @Override
     public void delete(T object) throws SQLException {
-        String sql = getDeleteQuery();
-        try (PreparedStatement statement = connect.prepareStatement(sql)) {
+        try (PreparedStatement statement = connect.prepareStatement(getDeleteQuery())) {
             try {
                 statement.setInt(1, object.getId());
             } catch (Exception e) {
@@ -127,8 +128,7 @@ public abstract class AbstractDAO <T extends Identified, PK extends Integer> imp
     @Override
     public List<T> getAll() {
         List<T> list = null;
-        String sql = getSelectQuery();
-        try (PreparedStatement statement = connect.prepareStatement(sql)) {
+        try (PreparedStatement statement = connect.prepareStatement(getSelectQuery())) {
             ResultSet rs = statement.executeQuery();
             list = parseResultSetList(rs);
         } catch (Exception e) {

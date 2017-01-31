@@ -15,8 +15,16 @@ public class UserService {
 		userDao = new UserDAOImpl();
 	}
 	
-	public User addClient(User user) throws SQLException {
+	public User addUser(User user) throws SQLException {
 		return userDao.create(user);
+    }
+	
+	public User findUserByEmail(String email) throws SQLException {
+		return userDao.findUserByEmail(email);
+    }
+	
+	public void deleteUser(User user) throws SQLException {
+		userDao.delete(user);
     }
 	
 }

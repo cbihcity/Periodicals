@@ -1,5 +1,6 @@
 package by.pvt.heldyieu.dao.implementation;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,6 +10,7 @@ import org.apache.log4j.Logger;
 
 import by.pvt.heldyieu.dao.generic.AbstractDAO;
 import by.pvt.heldyieu.entity.User;
+import by.pvt.heldyieu.enums.UserType;
 
 public class UserDAOImpl extends AbstractDAO<User, Integer> {
 	private static final Logger LOGGER = Logger.getLogger(UserDAOImpl.class);
@@ -37,14 +39,26 @@ public class UserDAOImpl extends AbstractDAO<User, Integer> {
 	public String getDeleteQuery() {
 		return resmanager.getProperty("deleteUserById");
 	}
-
+	
+	public String getFindEmailQuery() {
+		return resmanager.getProperty("findUserByEmail");
+	}
+	
 	@Override
-	protected User parseResultSet(ResultSet rs, User user) throws SQLException {
-		if (rs.next()) {
-			user.setId(rs.getInt(1));
-		}
-		else {
-			LOGGER.error("Failed to create user, no ID obtained.");
+	protected User parseResultSet(ResultSet rs) throws SQLException {
+		User user = null;
+		try {
+			if(rs.next()) {
+                user = new User();
+                user.setId(rs.getInt("id"));
+                user.setFirstName(rs.getString("first_name"));
+                user.setLastName(rs.getString("last_name"));
+                user.setPassword(rs.getString("password"));
+                user.setEmail(rs.getString("email"));
+                user.setUserType(UserType.values()[rs.getInt("user_type_id") - 1]);
+            }
+		} catch (SQLException e) {
+			LOGGER.info(e.getMessage());
 		}
 		return user;
 	}
@@ -70,6 +84,20 @@ public class UserDAOImpl extends AbstractDAO<User, Integer> {
 			User object) throws SQLException {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public User findUserByEmail(String email) {
+		LOGGER.info("Getting user with email " + email);
+		User user = null;
+		try(PreparedStatement statement = connect.prepareStatement(getFindEmailQuery())) {
+			statement.setString(1, email);
+			ResultSet result = statement.executeQuery();
+			user = parseResultSet(result);
+		} catch (SQLException e) {
+			LOGGER.error(e.getMessage());
+		}
+
+		return user;
 	}
 
 }

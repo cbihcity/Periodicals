@@ -17,7 +17,7 @@ public class ConnectionFactory {
         LOGGER.info("Initializing connectionFactory class");
 
         try {
-        	resmanager = ResourceManager.getInstance("connection");
+        	resmanager = new ResourceManager("connection");
         	Class.forName(resmanager.getProperty("jdbc"));
         	connect = DriverManager.getConnection(resmanager.getProperty("database"), resmanager.getProperty("user"), resmanager.getProperty("password"));
         	

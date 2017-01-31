@@ -45,7 +45,7 @@ public class MagazineDAOImpl extends AbstractDAO<Magazine, Integer> {
 	}
 
 	@Override
-	protected Magazine parseResultSet(ResultSet rs, Magazine Object)
+	protected Magazine parseResultSet(ResultSet rs)
 			throws SQLException {
 		// TODO Auto-generated method stub
 		return null;

@@ -44,7 +44,7 @@ public class SubscriptionDAOImpl extends AbstractDAO<Subscription, Integer>{
 	}
 
 	@Override
-	protected Subscription parseResultSet(ResultSet rs, Subscription Object)
+	protected Subscription parseResultSet(ResultSet rs)
 			throws SQLException {
 		// TODO Auto-generated method stub
 		return null;
