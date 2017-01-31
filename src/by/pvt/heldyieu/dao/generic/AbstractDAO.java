@@ -12,12 +12,13 @@ import org.apache.log4j.Logger;
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 
 import by.pvt.heldyieu.dao.connection.ConnectionFactory;
+import by.pvt.heldyieu.interfaces.Constants;
 import by.pvt.heldyieu.interfaces.GenericDAO;
 import by.pvt.heldyieu.interfaces.Identified;
 import by.pvt.heldyieu.resources.ResourceManager;
 
 
-public abstract class AbstractDAO <T extends Identified, PK extends Integer> implements GenericDAO<T, PK>{
+public abstract class AbstractDAO <T extends Identified, PK extends Integer> implements GenericDAO<T, PK>, Constants{
 	private static final Logger LOGGER = Logger.getLogger(AbstractDAO.class);
 	protected Connection connect;
 	protected ResourceManager resmanager;
@@ -80,30 +81,37 @@ public abstract class AbstractDAO <T extends Identified, PK extends Integer> imp
     public T getByPK(Integer key) throws SQLException {
     	LOGGER.info("Find object by id and return it");
         T tempEntity = null;
+        ResultSet rs = null;
         try (PreparedStatement statement = connect.prepareStatement(getSelectQuery()+" WHERE id = ?")) {
             statement.setInt(1, key);
-            ResultSet rs = statement.executeQuery();
+            rs = statement.executeQuery();
             tempEntity = parseResultSet(rs);
         } catch (Exception e) {
-            throw new SQLException(e);
+        	LOGGER.info(e.getMessage());
+            System.out.println(ERROR_EXECUTE_RESULTSET);
         }
-        if (tempEntity == null) {
-            throw new SQLException("Record with PK = " + key + " not found.");
-        }
-        
+        finally {
+			try {
+				rs.close();
+			} catch (SQLException e) {
+				LOGGER.info(e.getMessage());
+				System.out.println(ERROR_CLOSING_RESULTSET);
+			}
+		}
         return tempEntity;
     }
 
     @Override
     public void update(T object) throws SQLException {
         try (PreparedStatement statement = connect.prepareStatement(getUpdateQuery());) {
-            prepareStatementForUpdate(statement, object); // заполнение аргументов запроса оставим на совесть потомков
+            prepareStatementForUpdate(statement, object); 
             int count = statement.executeUpdate();
             if (count != 1) {
                 throw new SQLException("On update modify more then 1 record: " + count);
             }
         } catch (Exception e) {
-            throw new SQLException(e);
+        	LOGGER.info(e.getMessage());
+            System.out.println(ERROR_EXECUTE_RESULTSET);
         }
     }
 
@@ -128,18 +136,22 @@ public abstract class AbstractDAO <T extends Identified, PK extends Integer> imp
     @Override
     public List<T> getAll() {
         List<T> list = null;
+        ResultSet rs = null;
         try (PreparedStatement statement = connect.prepareStatement(getSelectQuery())) {
-            ResultSet rs = statement.executeQuery();
+            rs = statement.executeQuery();
             list = parseResultSetList(rs);
         } catch (Exception e) {
-            try {
-				throw new SQLException(e);
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+            LOGGER.info(e.getMessage());
+            System.out.println(ERROR_EXECUTE_RESULTSET);
+		} finally {
+			try {
+				rs.close();
+			} catch (SQLException e) {
+				LOGGER.info(e.getMessage());
+				System.out.println(ERROR_CLOSING_RESULTSET);
 			}
-        }
-        return list;
+		}
+		return list;
     }
 	
 }

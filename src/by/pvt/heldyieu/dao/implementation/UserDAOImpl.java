@@ -1,13 +1,10 @@
 package by.pvt.heldyieu.dao.implementation;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-
 import org.apache.log4j.Logger;
-
 import by.pvt.heldyieu.dao.generic.AbstractDAO;
 import by.pvt.heldyieu.entity.User;
 import by.pvt.heldyieu.enums.UserType;
@@ -89,14 +86,23 @@ public class UserDAOImpl extends AbstractDAO<User, Integer> {
 	public User findUserByEmail(String email) {
 		LOGGER.info("Getting user with email " + email);
 		User user = null;
+		ResultSet result = null;
 		try(PreparedStatement statement = connect.prepareStatement(getFindEmailQuery())) {
 			statement.setString(1, email);
-			ResultSet result = statement.executeQuery();
+			result = statement.executeQuery();
 			user = parseResultSet(result);
 		} catch (SQLException e) {
 			LOGGER.error(e.getMessage());
+			System.out.println(ERROR_EXECUTE_RESULTSET);
 		}
-
+		 finally {
+				try {
+					result.close();
+				} catch (SQLException e) {
+					LOGGER.info(e.getMessage());
+					System.out.println(ERROR_CLOSING_RESULTSET);
+				}
+			}
 		return user;
 	}
 

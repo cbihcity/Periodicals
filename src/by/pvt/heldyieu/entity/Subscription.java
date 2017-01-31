@@ -89,7 +89,7 @@ public class Subscription implements Identified{
 	 * @return the startDate
 	 */
 	public Date getStartDate() {
-		return startDate;
+		return (Date) startDate.clone();
 	}
 	/**
 	 * @param startDate the startDate to set
@@ -101,7 +101,7 @@ public class Subscription implements Identified{
 	 * @return the endDate
 	 */
 	public Date getEndDate() {
-		return endDate;
+		return (Date) endDate.clone();
 	}
 	/**
 	 * @param endDate the endDate to set
