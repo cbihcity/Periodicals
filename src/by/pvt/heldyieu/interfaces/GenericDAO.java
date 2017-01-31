@@ -1,10 +1,9 @@
-package by.pvt.heldyieu.dao.generic;
+package by.pvt.heldyieu.interfaces;
 
-import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
 
-public interface GenericDAO <T, PK extends Serializable> {
+public interface GenericDAO <T, PK extends Number> {
 	
     /** Создает новую запись, соответствующую объекту object */
     public T create(T object) throws SQLException;
