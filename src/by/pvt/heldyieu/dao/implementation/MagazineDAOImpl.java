@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+
 import by.pvt.heldyieu.dao.AbstractDAO;
 import by.pvt.heldyieu.entity.Magazine;
 import by.pvt.heldyieu.enums.CategoryType;
@@ -50,6 +51,11 @@ public class MagazineDAOImpl extends AbstractDAO<Magazine, Integer> {
 	
 	public String getFindNameQuery() {
 		return resmanager.getProperty("findMagazineByName");
+	}
+	
+	@Override
+	public String getSelectAllQuery() {
+		return resmanager.getProperty("selectAll");
 	}
 
 	@Override

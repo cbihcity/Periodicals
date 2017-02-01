@@ -1,6 +1,8 @@
 package by.pvt.heldyieu.entity;
 
+import java.util.Calendar;
 import java.util.Date;
+
 import by.pvt.heldyieu.interfaces.Identified;
 
 public class Subscription implements Identified{
@@ -27,15 +29,15 @@ public class Subscription implements Identified{
 	 * @param price
 	 */
 	public Subscription(Integer id, User user, Magazine magazine,
-			SubscriptionType type, Date startDate, Date endDate, Double price) {
+			SubscriptionType type, Date startDate) {
 		super();
 		this.id = id;
 		this.user = user;
 		this.magazine = magazine;
 		this.type = type;
 		this.startDate = startDate;
-		this.endDate = endDate;
-		this.price = price;
+		this.endDate = addDays(startDate, type.getMonthValue());
+		this.price = magazine.getPrice()*type.getMonthValue();
 	}
 	/**
 	 * @return the id
@@ -121,6 +123,15 @@ public class Subscription implements Identified{
 	public void setPrice(Double price) {
 		this.price = price;
 	}
+	
+	private static Date addDays(Date date, int month)
+	{
+	    Calendar cal = Calendar.getInstance();
+	    cal.setTime(date);
+	    cal.add(Calendar.MONTH, month);
+	    return cal.getTime();
+	}
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */

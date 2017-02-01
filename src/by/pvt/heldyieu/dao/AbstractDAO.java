@@ -37,6 +37,8 @@ public abstract class AbstractDAO <T extends Identified, PK extends Number> impl
     public abstract String getUpdateQuery();
 
     public abstract String getDeleteQuery();
+    
+    public abstract String getSelectAllQuery();
 
     protected abstract T parseResultSet(ResultSet rs) throws SQLException;
     
@@ -134,7 +136,7 @@ public abstract class AbstractDAO <T extends Identified, PK extends Number> impl
     public List<T> getAll() {
         List<T> list = null;
         ResultSet rs = null;
-        try (PreparedStatement statement = connect.prepareStatement(getSelectQuery())) {
+        try (PreparedStatement statement = connect.prepareStatement(getSelectAllQuery())) {
             rs = statement.executeQuery();
             list = parseResultSetList(rs);
         } catch (Exception e) {
@@ -150,5 +152,4 @@ public abstract class AbstractDAO <T extends Identified, PK extends Number> impl
 		}
 		return list;
     }
-	
 }

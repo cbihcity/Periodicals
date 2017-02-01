@@ -1,11 +1,8 @@
 package by.pvt.heldyieu.interfaces;
 
-/**
- * Интерфейс идентифицируемых объектов.
- */
-public interface Identified{
 
-    /** Возвращает идентификатор объекта */
+public interface Identified{
+   
     public Integer getId();
     public void setId(Integer id);
 }

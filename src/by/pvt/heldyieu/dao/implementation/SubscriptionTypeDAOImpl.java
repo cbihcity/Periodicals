@@ -51,6 +51,11 @@ public class SubscriptionTypeDAOImpl extends AbstractDAO<SubscriptionType, Integ
 	public String getFindNameQuery() {
 		return resmanager.getProperty("findSubscriptionTypeByName");
 	}
+	
+	@Override
+	public String getSelectAllQuery() {
+		return resmanager.getProperty("selectAll");
+	}
 
 	@Override
 	protected SubscriptionType parseResultSet(ResultSet rs) throws SQLException {

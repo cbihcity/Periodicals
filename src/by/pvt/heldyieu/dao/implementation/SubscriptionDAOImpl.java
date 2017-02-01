@@ -3,6 +3,7 @@ package by.pvt.heldyieu.dao.implementation;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -54,7 +55,12 @@ public class SubscriptionDAOImpl extends AbstractDAO<Subscription, Integer>{
 	}
 
 	public String getFindQuery() {
-		return resmanager.getProperty("findSubscriptionByUser");
+		return resmanager.getProperty("findSubscriptionByEmail");
+	}
+	
+	@Override
+	public String getSelectAllQuery() {
+		return resmanager.getProperty("selectAll");
 	}
 	
 	@Override
@@ -77,22 +83,66 @@ public class SubscriptionDAOImpl extends AbstractDAO<Subscription, Integer>{
 	@Override
 	protected List<Subscription> parseResultSetList(ResultSet rs)
 			throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		List<Subscription> list = new ArrayList<Subscription>();
+		while (rs.next()) {
+			Subscription subscription = new Subscription();
+			subscription.setId(rs.getInt("subscription_id"));
+			subscription.setUser(userDao.readById(rs.getInt("person_id")));
+			subscription.setMagazine(magazineDao.readById(rs.getInt("magazine_id")));
+			subscription.setType(subscriptionTypeDao.readById(rs.getInt("subscription_type")));
+			subscription.setStartDate(rs.getDate("start_date"));
+			subscription.setEndDate(rs.getDate("end_date"));
+			subscription.setPrice(rs.getDouble("price"));
+			list.add(subscription);
+		}
+		return list;
 	}
 
 	@Override
 	protected void prepareStatementForInsert(PreparedStatement statement,
 			Subscription object) throws SQLException {
-		// TODO Auto-generated method stub
-		
+			statement.setInt(1, object.getUser().getId());
+			statement.setInt(2, object.getMagazine().getId());
+			statement.setInt(3, object.getType().getId());
+			statement.setDate(4, convert(object.getStartDate()));
+			statement.setDate(5, convert(object.getEndDate()));
+			statement.setDouble(6, object.getPrice());
 	}
 
 	@Override
 	protected void prepareStatementForUpdate(PreparedStatement statement,
 			Subscription object) throws SQLException {
-		// TODO Auto-generated method stub
+		statement.setInt(1, object.getUser().getId());
+		statement.setInt(2, object.getMagazine().getId());
+		statement.setInt(3, object.getType().getId());
+		statement.setDate(4, convert(object.getStartDate()));
+		statement.setDate(5, convert(object.getEndDate()));
+		statement.setDouble(6, object.getPrice());
+		statement.setInt(7, object.getId());
 		
+	}
+	
+	public Subscription findSubscriptionByUser(String email) {
+		LOGGER.info("Try to find Subscription by user email " + email);
+		ResultSet result = null;
+		Subscription subscription = new Subscription();
+		try(PreparedStatement statement = connect.prepareStatement(getFindQuery())) {
+			statement.setInt(1, userDao.findUserByEmail(email).getId());
+			result = statement.executeQuery();
+			subscription = parseResultSet(result);
+		} catch (SQLException e) {
+			LOGGER.error(e.getMessage());
+			System.out.println(ERROR_SQL_EXECUTE);
+		}
+		 finally {
+				try {
+					result.close();
+				} catch (SQLException e) {
+					LOGGER.info(e.getMessage());
+					System.out.println(ERROR_CLOSING_RESULTSET);
+				}
+			}
+		return subscription;
 	}
 	
 	private java.sql.Date convert(java.util.Date date) {
