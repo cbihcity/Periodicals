@@ -1,4 +1,4 @@
-package by.pvt.heldyieu.dao.generic;
+package by.pvt.heldyieu.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

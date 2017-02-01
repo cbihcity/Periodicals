@@ -5,8 +5,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.log4j.Logger;
-import by.pvt.heldyieu.dao.generic.AbstractDAO;
+
+import by.pvt.heldyieu.dao.AbstractDAO;
 import by.pvt.heldyieu.entity.SubscriptionType;
 
 public class SubscriptionTypeDAOImpl extends AbstractDAO<SubscriptionType, Integer> {
@@ -38,7 +40,7 @@ public class SubscriptionTypeDAOImpl extends AbstractDAO<SubscriptionType, Integ
 		return resmanager.getProperty("deleteSubscriptionTypeById");
 	}
 	
-	public String getFindSubscriptonTypeQuery() {
+	public String getFindNameQuery() {
 		return resmanager.getProperty("findSubscriptionTypeByName");
 	}
 
@@ -93,7 +95,7 @@ public class SubscriptionTypeDAOImpl extends AbstractDAO<SubscriptionType, Integ
 		LOGGER.info("Try to find SubscriptionType by name " + name);
 		SubscriptionType subscriptionType = null;
 		ResultSet result = null;
-		try(PreparedStatement statement = connect.prepareStatement(getFindSubscriptonTypeQuery())) {
+		try(PreparedStatement statement = connect.prepareStatement(getFindNameQuery())) {
 			statement.setString(1, name);
 			result = statement.executeQuery();
 			subscriptionType = parseResultSet(result);

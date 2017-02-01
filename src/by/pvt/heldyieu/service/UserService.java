@@ -27,7 +27,7 @@ public class UserService {
 	}
 	
 	public User addUser(User user) throws SQLException {
-		LOGGER.info("Try to create new user entity");
+		LOGGER.info("Try to add new user to database");
 		return userDao.create(user);
     }
 	

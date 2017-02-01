@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import by.pvt.heldyieu.dao.generic.AbstractDAO;
+import by.pvt.heldyieu.dao.AbstractDAO;
 import by.pvt.heldyieu.entity.Subscription;
 
 public class SubscriptionDAOImpl extends AbstractDAO<Subscription, Integer>{

@@ -5,8 +5,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.log4j.Logger;
-import by.pvt.heldyieu.dao.generic.AbstractDAO;
+
+import by.pvt.heldyieu.dao.AbstractDAO;
 import by.pvt.heldyieu.entity.User;
 import by.pvt.heldyieu.enums.UserType;
 

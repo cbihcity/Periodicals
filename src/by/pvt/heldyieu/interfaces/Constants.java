@@ -6,6 +6,6 @@ public interface Constants {
 	String ERROR_DELETE_RESULTSET = "Произошла ошибка при выполнении операции удаления. Подробнее в логе log.txt";
 	String ERROR_CREATE_RESULTSET = "Произошла ошибка при выполнении операции создания. Подробнее в логе log.txt";
 	String ERROR_UPDATE_RESULTSET = "Произошла ошибка при выполнении операции обновления. Подробнее в логе log.txt";
-	String ERROR_INTEGRITY_CONSTRAINT_VIOLATION = "Дублирование значения email 'email_UNIQUE'. Подробнее в логе log.txt";
+	String ERROR_INTEGRITY_CONSTRAINT_VIOLATION = "Дублирование значения поля таблицы. Подробнее в логе log.txt";
 	String ERROR_GET_ID = "Ошибка при создании пользователя. Не получен ID. Подробнее в логе log.txt";
 }

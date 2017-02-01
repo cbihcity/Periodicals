@@ -27,7 +27,7 @@ public class SubscriptionTypeService {
 	}
 	
 	public SubscriptionType addSubscriptionType(SubscriptionType subscriptionType) throws SQLException {
-		LOGGER.info("Try to create new SubscriptionType entity");
+		LOGGER.info("Try to add new SubscriptionType to database");
 		return subscriptionTypeDao.create(subscriptionType);
     }
 	
