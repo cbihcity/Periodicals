@@ -12,7 +12,7 @@ import by.pvt.heldyieu.entity.Subscription;
 
 public class SubscriptionDAOImpl extends AbstractDAO<Subscription, Integer>{
 	
-	public SubscriptionDAOImpl(String resource) {
+	public SubscriptionDAOImpl() {
 		super("sqlSubscription");
 		// TODO Auto-generated constructor stub
 	}

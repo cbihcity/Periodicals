@@ -57,6 +57,7 @@ public class UserDAOImpl extends AbstractDAO<User, Integer> {
             }
 		} catch (SQLException e) {
 			LOGGER.info(e.getMessage());
+			System.out.println(ERROR_SQL_EXECUTE);
 		}
 		return user;
 	}
@@ -100,7 +101,7 @@ public class UserDAOImpl extends AbstractDAO<User, Integer> {
 	}
 	
 	public User findUserByEmail(String email) {
-		LOGGER.info("Getting user with email " + email);
+		LOGGER.info("Try to find user by email " + email);
 		User user = null;
 		ResultSet result = null;
 		try(PreparedStatement statement = connect.prepareStatement(getFindEmailQuery())) {

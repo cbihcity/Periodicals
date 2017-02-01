@@ -68,7 +68,7 @@ public abstract class AbstractDAO <T extends Identified, PK extends Number> impl
 				}					
 				}
 			} catch (MySQLIntegrityConstraintViolationException e) {
-				LOGGER.info(e.getMessage());
+				LOGGER.info(e.getMessage(), e);
 				System.out.println(ERROR_INTEGRITY_CONSTRAINT_VIOLATION);
 			}
         
@@ -86,14 +86,14 @@ public abstract class AbstractDAO <T extends Identified, PK extends Number> impl
             rs = statement.executeQuery();
             tempEntity = parseResultSet(rs);
         } catch (Exception e) {
-        	LOGGER.info(e.getMessage());
+        	LOGGER.info(e.getMessage(), e);
             System.out.println(ERROR_SQL_EXECUTE);
         }
         finally {
 			try {
 				rs.close();
 			} catch (SQLException e) {
-				LOGGER.info(e.getMessage());
+				LOGGER.info(e.getMessage(), e);
 				System.out.println(ERROR_CLOSING_RESULTSET);
 			}
 		}
@@ -109,7 +109,7 @@ public abstract class AbstractDAO <T extends Identified, PK extends Number> impl
             	LOGGER.info("On update modify more then 1 record: " + count);
             }
         } catch (Exception e) {
-        	LOGGER.info(e.getMessage());
+        	LOGGER.info(e.getMessage(), e);
             System.out.println(ERROR_SQL_EXECUTE);
         }
     }
@@ -125,7 +125,7 @@ public abstract class AbstractDAO <T extends Identified, PK extends Number> impl
             }
             statement.close();
         } catch (Exception e) {
-        	LOGGER.info(e.getMessage());
+        	LOGGER.info(e.getMessage(), e);
             System.out.println(ERROR_SQL_EXECUTE);
         }
     }
@@ -138,13 +138,13 @@ public abstract class AbstractDAO <T extends Identified, PK extends Number> impl
             rs = statement.executeQuery();
             list = parseResultSetList(rs);
         } catch (Exception e) {
-            LOGGER.info(e.getMessage());
+            LOGGER.info(e.getMessage(), e);
             System.out.println(ERROR_SQL_EXECUTE);
 		} finally {
 			try {
 				rs.close();
 			} catch (SQLException e) {
-				LOGGER.info(e.getMessage());
+				LOGGER.info(e.getMessage(), e);
 				System.out.println(ERROR_CLOSING_RESULTSET);
 			}
 		}

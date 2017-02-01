@@ -13,7 +13,7 @@ import by.pvt.heldyieu.entity.Magazine;
 public class MagazineDAOImpl extends AbstractDAO<Magazine, Integer> {
 	
 	
-	public MagazineDAOImpl(String resource) {
+	public MagazineDAOImpl() {
 		super("sqlMagazine");
 		// TODO Auto-generated constructor stub
 	}

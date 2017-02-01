@@ -1,23 +1,21 @@
 package by.pvt.heldyieu.test;
 
 import java.sql.SQLException;
-import org.apache.log4j.Logger;
+
+import by.pvt.heldyieu.entity.SubscriptionType;
 import by.pvt.heldyieu.entity.User;
 import by.pvt.heldyieu.enums.UserType;
+import by.pvt.heldyieu.service.SubscriptionTypeService;
 import by.pvt.heldyieu.service.UserService;
 
 public class Test {
 	public static void main(String[] args) {
-		final Logger LOGGER = Logger.getLogger(Test.class);
 		
-		LOGGER.info("Create new user entity");
+		//TEST UserDAOImplementation
 		User user = new User(1, "Andre", "Vasin", "cbihcity@gmail.com", "asdf", UserType.USER);
-		LOGGER.info("Create new userservice entity");
-		UserService service = new UserService();
+		UserService service = UserService.getInstance();
 		try {
-			LOGGER.info("Try to register new user to database");
 			user = service.addUser(user);
-			LOGGER.info("Try to print new user to database");
 			System.out.println(user);
 			System.out.println(service.getUser(user.getId()));
 			user.setEmail("new@mail.ru");
@@ -25,9 +23,32 @@ public class Test {
 			service.updateUser(user);
 			service.getAllUsers().forEach(item->System.out.println(item.toString()));
 			service.deleteUser(user);
+			System.out.println(service.findUserByEmail("xanderakk@mail.ru").toString());
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		//TEST SubscriptionTypeDAOImplementation
+		SubscriptionType type1 = new SubscriptionType(1, "quarter", 3);
+		SubscriptionType type2 = new SubscriptionType(2, "semi-annual", 6);
+		SubscriptionType type3 = new SubscriptionType(3, "annual", 12);
+		SubscriptionTypeService subscriptionTypeService = SubscriptionTypeService.getInstance();
+		try {
+			type1 = subscriptionTypeService.addSubscriptionType(type1);
+			type2 = subscriptionTypeService.addSubscriptionType(type2);
+			type3 = subscriptionTypeService.addSubscriptionType(type3);
+			System.out.println(subscriptionTypeService.getSubscriptionType(2).toString());
+			System.out.println(subscriptionTypeService.getSubscriptionType(3).toString());
+			type2.setMonthValue(15);
+			subscriptionTypeService.updateSubscriptionType(type2);
+			subscriptionTypeService.deleteSubscriptionType(type2);
+			subscriptionTypeService.getAllSubscriptionTypes().forEach(item->System.out.println(item.toString()));
+			System.out.println(subscriptionTypeService.findSubscriptionTypeByName(type3.getName()).toString());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 }
