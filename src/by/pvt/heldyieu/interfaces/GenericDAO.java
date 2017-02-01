@@ -7,7 +7,7 @@ public interface GenericDAO <T, PK extends Number> {
 	
     public T create(T object) throws SQLException;
 
-    public T getByPK(PK key) throws SQLException;
+    public T readById(PK key) throws SQLException;
 
     public void update(T object) throws SQLException;
 

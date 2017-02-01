@@ -54,7 +54,7 @@ public abstract class AbstractDAO <T extends Identified, PK extends Number> impl
             int count = statement.executeUpdate();
             if (count != 1) {
             	LOGGER.info("On persist modify more then 1 record: " + count);
-                throw new SQLException("On persist modify more then 1 record: " + count);
+                System.out.println(ERROR_CREATE_RESULTSET);
             } else {
 				LOGGER.info("User creation successful");
 				try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
@@ -63,19 +63,20 @@ public abstract class AbstractDAO <T extends Identified, PK extends Number> impl
 					}
 					else {
 						LOGGER.error("Failed to create user, no ID obtained.");
+						System.out.println(ERROR_GET_ID);
 					}
 				}					
 				}
 			} catch (MySQLIntegrityConstraintViolationException e) {
 				LOGGER.info(e.getMessage());
-				System.out.println("Duplicate entry 'cbihcity@gmail.com' for key 'email_UNIQUE'");
+				System.out.println(ERROR_INTEGRITY_CONSTRAINT_VIOLATION);
 			}
         
         return object;
     }
 
     @Override
-    public T getByPK(Number key) throws SQLException {
+    public T readById(Number key) throws SQLException {
     	LOGGER.info("Find object by id and return it");
     	
         T tempEntity = null;
@@ -86,7 +87,7 @@ public abstract class AbstractDAO <T extends Identified, PK extends Number> impl
             tempEntity = parseResultSet(rs);
         } catch (Exception e) {
         	LOGGER.info(e.getMessage());
-            System.out.println(ERROR_EXECUTE_RESULTSET);
+            System.out.println(ERROR_SQL_EXECUTE);
         }
         finally {
 			try {
@@ -105,29 +106,27 @@ public abstract class AbstractDAO <T extends Identified, PK extends Number> impl
             prepareStatementForUpdate(statement, object); 
             int count = statement.executeUpdate();
             if (count != 1) {
-                throw new SQLException("On update modify more then 1 record: " + count);
+            	LOGGER.info("On update modify more then 1 record: " + count);
             }
         } catch (Exception e) {
         	LOGGER.info(e.getMessage());
-            System.out.println(ERROR_EXECUTE_RESULTSET);
+            System.out.println(ERROR_SQL_EXECUTE);
         }
     }
 
     @Override
     public void delete(T object) throws SQLException {
         try (PreparedStatement statement = connect.prepareStatement(getDeleteQuery())) {
-            try {
-                statement.setInt(1, object.getId());
-            } catch (Exception e) {
-                throw new SQLException(e);
-            }
+            statement.setInt(1, object.getId());
             int count = statement.executeUpdate();
             if (count != 1) {
-                throw new SQLException("On delete modify more then 1 record: " + count);
+            	LOGGER.info("On delete modify more then 1 record: " + count + object.toString());
+                System.out.println(ERROR_DELETE_RESULTSET);
             }
             statement.close();
         } catch (Exception e) {
-            throw new SQLException(e);
+        	LOGGER.info(e.getMessage());
+            System.out.println(ERROR_SQL_EXECUTE);
         }
     }
 
@@ -140,7 +139,7 @@ public abstract class AbstractDAO <T extends Identified, PK extends Number> impl
             list = parseResultSetList(rs);
         } catch (Exception e) {
             LOGGER.info(e.getMessage());
-            System.out.println(ERROR_EXECUTE_RESULTSET);
+            System.out.println(ERROR_SQL_EXECUTE);
 		} finally {
 			try {
 				rs.close();

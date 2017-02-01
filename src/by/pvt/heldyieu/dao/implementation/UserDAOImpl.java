@@ -3,6 +3,7 @@ package by.pvt.heldyieu.dao.implementation;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import org.apache.log4j.Logger;
 import by.pvt.heldyieu.dao.generic.AbstractDAO;
@@ -62,8 +63,18 @@ public class UserDAOImpl extends AbstractDAO<User, Integer> {
 	
 	@Override
 	protected List<User> parseResultSetList(ResultSet rs) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		List<User> listUsers = new ArrayList<User>();
+		while (rs.next()) {
+			User user = new User();
+            user.setId(rs.getInt("id"));
+            user.setFirstName(rs.getString("first_name"));
+            user.setLastName(rs.getString("last_name"));
+            user.setPassword(rs.getString("password"));
+            user.setEmail(rs.getString("email"));
+            user.setUserType(UserType.values()[rs.getInt("user_type_id") - 1]);
+            listUsers.add(user);
+		}
+		return listUsers;
 	}
 
 	@Override
@@ -79,7 +90,12 @@ public class UserDAOImpl extends AbstractDAO<User, Integer> {
 	@Override
 	protected void prepareStatementForUpdate(PreparedStatement statement,
 			User object) throws SQLException {
-		// TODO Auto-generated method stub
+		statement.setInt(1, object.getUserType().ordinal()+1);
+		statement.setString(2, object.getFirstName());
+		statement.setString(3, object.getLastName());
+		statement.setString(4, object.getEmail());
+		statement.setString(5, object.getPassword());
+		statement.setInt(6, object.getId());
 		
 	}
 	
@@ -93,7 +109,7 @@ public class UserDAOImpl extends AbstractDAO<User, Integer> {
 			user = parseResultSet(result);
 		} catch (SQLException e) {
 			LOGGER.error(e.getMessage());
-			System.out.println(ERROR_EXECUTE_RESULTSET);
+			System.out.println(ERROR_SQL_EXECUTE);
 		}
 		 finally {
 				try {
