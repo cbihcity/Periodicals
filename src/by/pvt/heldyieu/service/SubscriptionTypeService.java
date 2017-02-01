@@ -15,7 +15,7 @@ public class SubscriptionTypeService {
 	
 	private SubscriptionTypeService() {
 		LOGGER.info("Create new SubscriptionTypeDAOImpl entity");
-		subscriptionTypeDao = new SubscriptionTypeDAOImpl();
+		subscriptionTypeDao = SubscriptionTypeDAOImpl.getInstance();
 	}
 	
 	public static SubscriptionTypeService getInstance(){

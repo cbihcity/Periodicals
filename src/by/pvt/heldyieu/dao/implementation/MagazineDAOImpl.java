@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.log4j.Logger;
 import by.pvt.heldyieu.dao.AbstractDAO;
 import by.pvt.heldyieu.entity.Magazine;
@@ -13,10 +14,18 @@ import by.pvt.heldyieu.enums.CategoryType;
 public class MagazineDAOImpl extends AbstractDAO<Magazine, Integer> {
 	
 	private static final Logger LOGGER = Logger.getLogger(MagazineDAOImpl.class);
+	private static MagazineDAOImpl INSTANCE;
 	
-	public MagazineDAOImpl() {
+	private MagazineDAOImpl() {
 		super("sqlMagazine");
 		LOGGER.info("Initialize resource for MagazineDAOImpl and connection to database");
+	}
+	
+	public static MagazineDAOImpl getInstance(){
+		if (INSTANCE == null) {
+			INSTANCE = new MagazineDAOImpl();
+		}
+		return INSTANCE;
 	}
 
 	@Override

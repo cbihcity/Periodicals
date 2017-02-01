@@ -81,7 +81,7 @@ public abstract class AbstractDAO <T extends Identified, PK extends Number> impl
     	
         T tempEntity = null;
         ResultSet rs = null;
-        try (PreparedStatement statement = connect.prepareStatement(getSelectQuery()+" WHERE id = ?")) {
+        try (PreparedStatement statement = connect.prepareStatement(getSelectQuery())) {
             statement.setInt(1, (Integer)key);
             rs = statement.executeQuery();
             tempEntity = parseResultSet(rs);

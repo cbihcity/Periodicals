@@ -13,7 +13,7 @@ public class MagazineService {
 	
 	private MagazineService() {
 		LOGGER.info("Create new MagazineDAOImpl entity");
-		magazineDao = new MagazineDAOImpl();
+		magazineDao = MagazineDAOImpl.getInstance();
 	}
 	
 	public static MagazineService getInstance(){

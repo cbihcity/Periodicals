@@ -12,42 +12,66 @@ import by.pvt.heldyieu.entity.Subscription;
 
 public class SubscriptionDAOImpl extends AbstractDAO<Subscription, Integer>{
 	
-	public SubscriptionDAOImpl() {
+	private static final Logger LOGGER = Logger.getLogger(SubscriptionDAOImpl.class);
+	private static SubscriptionDAOImpl INSTANCE;
+	private UserDAOImpl userDao;
+	private MagazineDAOImpl magazineDao;
+	private SubscriptionTypeDAOImpl subscriptionTypeDao;
+	
+	private SubscriptionDAOImpl() {
 		super("sqlSubscription");
-		// TODO Auto-generated constructor stub
+		LOGGER.info("Initialize resource for SubscriptionDAOImpl and connection to database");
+		userDao = UserDAOImpl.getInstance();
+		magazineDao = MagazineDAOImpl.getInstance();
+		subscriptionTypeDao = SubscriptionTypeDAOImpl.getInstance();
 	}
 
-	private static final Logger LOGGER = Logger.getLogger(SubscriptionDAOImpl.class);
-
+	public static SubscriptionDAOImpl getInstance(){
+		if (INSTANCE == null) {
+			INSTANCE = new SubscriptionDAOImpl();
+		}
+		return INSTANCE;
+	}
+	
 	@Override
 	public String getSelectQuery() {
-		// TODO Auto-generated method stub
-		return null;
+		return resmanager.getProperty("selectSubscription");
 	}
 
 	@Override
 	public String getCreateQuery() {
-		// TODO Auto-generated method stub
-		return null;
+		return resmanager.getProperty("createSubscription");
 	}
 
 	@Override
 	public String getUpdateQuery() {
-		// TODO Auto-generated method stub
-		return null;
+		return resmanager.getProperty("updateSubscriptionById");
 	}
 
 	@Override
 	public String getDeleteQuery() {
-		// TODO Auto-generated method stub
-		return null;
+		return resmanager.getProperty("deleteSubscriptionById");
 	}
 
+	public String getFindQuery() {
+		return resmanager.getProperty("findSubscriptionByUser");
+	}
+	
 	@Override
 	protected Subscription parseResultSet(ResultSet rs)
 			throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		Subscription subscription = new Subscription();
+		if (rs.next()) {
+			subscription.setId(rs.getInt("subscription_id"));
+			subscription.setUser(userDao.readById(rs.getInt("person_id")));
+			subscription.setMagazine(magazineDao.readById(rs.getInt("magazine_id")));
+			subscription.setType(subscriptionTypeDao.readById(rs.getInt("subscription_type")));
+			subscription.setStartDate(rs.getDate("start_date"));
+			subscription.setEndDate(rs.getDate("end_date"));
+			subscription.setPrice(rs.getDouble("price"));
+			
+		}
+		return subscription;
 	}
 
 	@Override
@@ -70,4 +94,11 @@ public class SubscriptionDAOImpl extends AbstractDAO<Subscription, Integer>{
 		// TODO Auto-generated method stub
 		
 	}
+	
+	private java.sql.Date convert(java.util.Date date) {
+        if (date == null) {
+            return null;
+        }
+        return new java.sql.Date(date.getTime());
+    }
 }

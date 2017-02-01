@@ -15,7 +15,7 @@ public class UserService {
 
 	private UserService() {
 		LOGGER.info("Create new UserDAOImpl entity");
-		userDao = new UserDAOImpl();
+		userDao = UserDAOImpl.getInstance();
 	}
 	
 	public static UserService getInstance(){

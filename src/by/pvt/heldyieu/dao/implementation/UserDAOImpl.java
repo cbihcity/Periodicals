@@ -14,10 +14,18 @@ import by.pvt.heldyieu.enums.UserType;
 
 public class UserDAOImpl extends AbstractDAO<User, Integer> {
 	private static final Logger LOGGER = Logger.getLogger(UserDAOImpl.class);
-
-	public UserDAOImpl() {
+	private static UserDAOImpl INSTANCE;
+	
+	private UserDAOImpl() {
 		super("sqlUser");
 		LOGGER.info("Initialize resource for UserDAOImpl and connection to database");
+	}
+	
+	public static UserDAOImpl getInstance(){
+		if (INSTANCE == null) {
+			INSTANCE = new UserDAOImpl();
+		}
+		return INSTANCE;
 	}
 
 	@Override

@@ -14,10 +14,18 @@ import by.pvt.heldyieu.entity.SubscriptionType;
 public class SubscriptionTypeDAOImpl extends AbstractDAO<SubscriptionType, Integer> {
 	
 	private static final Logger LOGGER = Logger.getLogger(SubscriptionTypeDAOImpl.class);
+	private static SubscriptionTypeDAOImpl INSTANCE;
 	
-	public SubscriptionTypeDAOImpl() {
+	private SubscriptionTypeDAOImpl() {
 		super("sqlSubscriptionType");
 		LOGGER.info("Initialize resource for SubscriptionTypeDAOImpl and connection to database");
+	}
+	
+	public static SubscriptionTypeDAOImpl getInstance(){
+		if (INSTANCE == null) {
+			INSTANCE = new SubscriptionTypeDAOImpl();
+		}
+		return INSTANCE;
 	}
 
 	@Override
