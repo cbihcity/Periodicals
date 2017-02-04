@@ -34,7 +34,6 @@ public class Test {
 //			service.deleteUser(user);
 //			System.out.println(service.findUserByEmail("xanderakk@mail.ru"));
 //		} catch (SQLException e) {
-//			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
 //		
@@ -55,7 +54,6 @@ public class Test {
 //			subscriptionTypeService.getAllSubscriptionTypes().forEach(item->System.out.println(item));
 //			System.out.println(subscriptionTypeService.findSubscriptionTypeByName(type3.getName()));
 //		} catch (SQLException e) {
-//			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
 //		
@@ -78,7 +76,6 @@ public class Test {
 //			magazineService.getAllMagazines().forEach(item->System.out.println(item));
 			
 //		} catch (SQLException e) {
-//			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
 		
@@ -100,7 +97,6 @@ public class Test {
 //			subscriptionService.deleteSubscription(subscription1);
 //			
 //		} catch (SQLException e) {
-//			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
 		

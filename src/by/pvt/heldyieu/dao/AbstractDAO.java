@@ -25,8 +25,7 @@ public abstract class AbstractDAO <T extends Identified, PK extends Number> impl
 			connect = ConnectionFactory.getInstance().getConnection();
 			resmanager = new ResourceManager(resource);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.error(e.getMessage());
 		}
     }
 	
