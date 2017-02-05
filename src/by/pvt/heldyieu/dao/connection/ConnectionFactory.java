@@ -12,7 +12,7 @@ public class ConnectionFactory {
 	private static ConnectionFactory connectionFactory;
 	private ResourceManager resmanager;
 	private Connection connect;
-
+	// TODO NOT SINGLETON
     private ConnectionFactory() {
         LOGGER.info("Initializing connectionFactory class");
 
