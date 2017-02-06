@@ -22,7 +22,7 @@ public abstract class AbstractDAO<T extends Identified, PK extends Number> imple
 	
 	public AbstractDAO(String resource) {
         try {
-			connect = new ConnectionFactory().getConnection();
+			connect = ConnectionFactory.getInstance().getConnection();
 			resmanager = new ResourceManager(resource);
 		} catch (SQLException e) {
 			LOGGER.error(e.getMessage());
