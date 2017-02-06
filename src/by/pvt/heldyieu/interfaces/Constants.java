@@ -8,4 +8,9 @@ public interface Constants {
 	String ERROR_UPDATE_RESULTSET = "Произошла ошибка при выполнении операции обновления. Подробнее в логе log.txt";
 	String ERROR_INTEGRITY_CONSTRAINT_VIOLATION = "Дублирование значения поля таблицы. Подробнее в логе log.txt";
 	String ERROR_GET_ID = "Ошибка при создании пользователя. Не получен ID. Подробнее в логе log.txt";
+	String INVALID_PARSER_PARAMETER = "Неверно задан параметр для создания daoImpl";
+	String MAGAZINE_DAO = "magazineDao";
+	String USER_DAO = "userDao";
+	String SUBSCRIPTION_DAO = "subscriptionDao";
+	String SUBSCRIPTION_TYPE_DAO = "subscriptionTypeDao";
 }

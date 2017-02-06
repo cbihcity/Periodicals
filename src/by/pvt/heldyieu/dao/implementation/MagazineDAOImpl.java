@@ -9,22 +9,28 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import by.pvt.heldyieu.dao.AbstractDAO;
+import by.pvt.heldyieu.dao.factory.DaoFactory;
 import by.pvt.heldyieu.entity.Magazine;
 import by.pvt.heldyieu.enums.CategoryType;
+import by.pvt.heldyieu.exception.InvalidValueException;
 
 public class MagazineDAOImpl extends AbstractDAO<Magazine, Integer> {
 	
 	private static final Logger LOGGER = Logger.getLogger(MagazineDAOImpl.class);
 	private static MagazineDAOImpl INSTANCE;
 	
-	private MagazineDAOImpl() {
+	public MagazineDAOImpl() {
 		super("sqlMagazine");
 		LOGGER.info("Initialize resource for MagazineDAOImpl and connection to database");
 	}
 	
 	public static MagazineDAOImpl getInstance(){
 		if (INSTANCE == null) {
-			INSTANCE = new MagazineDAOImpl();
+			try {
+				INSTANCE = (MagazineDAOImpl) new DaoFactory().createDao("magazineDao");
+			} catch (InvalidValueException e) {
+				LOGGER.error(e.getMessage());
+			}
 		}
 		return INSTANCE;
 	}

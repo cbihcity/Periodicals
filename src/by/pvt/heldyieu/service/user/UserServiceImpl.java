@@ -15,7 +15,7 @@ public class UserServiceImpl implements IUserService{
 
 	private UserServiceImpl() {
 		LOGGER.info("Create new UserDAOImpl entity");
-		userDao = UserDAOImpl.getInstance();
+		userDao = (UserDAOImpl) UserDAOImpl.getInstance();
 	}
 	
 	public static UserServiceImpl getInstance(){

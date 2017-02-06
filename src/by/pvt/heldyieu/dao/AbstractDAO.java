@@ -15,14 +15,14 @@ import by.pvt.heldyieu.interfaces.Identified;
 import by.pvt.heldyieu.resources.ResourceManager;
 
 
-public abstract class AbstractDAO <T extends Identified, PK extends Number> implements GenericDAO<T, PK>, Constants{
+public abstract class AbstractDAO<T extends Identified, PK extends Number> implements GenericDAO<T, PK>, Constants{
 	private static final Logger LOGGER = Logger.getLogger(AbstractDAO.class);
 	protected Connection connect;
 	protected ResourceManager resmanager;
 	
 	public AbstractDAO(String resource) {
         try {
-			connect = ConnectionFactory.getInstance().getConnection();
+			connect = new ConnectionFactory().getConnection();
 			resmanager = new ResourceManager(resource);
 		} catch (SQLException e) {
 			LOGGER.error(e.getMessage());

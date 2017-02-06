@@ -5,23 +5,31 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.log4j.Logger;
+
 import by.pvt.heldyieu.dao.AbstractDAO;
+import by.pvt.heldyieu.dao.factory.DaoFactory;
 import by.pvt.heldyieu.entity.User;
 import by.pvt.heldyieu.enums.UserType;
+import by.pvt.heldyieu.exception.InvalidValueException;
 
 public class UserDAOImpl extends AbstractDAO<User, Integer> {
 	private static final Logger LOGGER = Logger.getLogger(UserDAOImpl.class);
 	private static UserDAOImpl INSTANCE;
 	
-	private UserDAOImpl() {
+	public UserDAOImpl() {
 		super("sqlUser");
 		LOGGER.info("Initialize resource for UserDAOImpl and connection to database");
 	}
 	
 	public static UserDAOImpl getInstance(){
 		if (INSTANCE == null) {
-			INSTANCE = new UserDAOImpl();
+			try {
+				INSTANCE = (UserDAOImpl) new DaoFactory().createDao("userDao");
+			} catch (InvalidValueException e) {
+				LOGGER.error(e.getMessage());
+			}
 		}
 		return INSTANCE;
 	}

@@ -5,25 +5,29 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.log4j.Logger;
-
 import by.pvt.heldyieu.dao.AbstractDAO;
+import by.pvt.heldyieu.dao.factory.DaoFactory;
 import by.pvt.heldyieu.entity.SubscriptionType;
+import by.pvt.heldyieu.exception.InvalidValueException;
 
 public class SubscriptionTypeDAOImpl extends AbstractDAO<SubscriptionType, Integer> {
 	
 	private static final Logger LOGGER = Logger.getLogger(SubscriptionTypeDAOImpl.class);
 	private static SubscriptionTypeDAOImpl INSTANCE;
 	
-	private SubscriptionTypeDAOImpl() {
+	public SubscriptionTypeDAOImpl() {
 		super("sqlSubscriptionType");
 		LOGGER.info("Initialize resource for SubscriptionTypeDAOImpl and connection to database");
 	}
 	
 	public static SubscriptionTypeDAOImpl getInstance(){
 		if (INSTANCE == null) {
-			INSTANCE = new SubscriptionTypeDAOImpl();
+			try {
+				INSTANCE = (SubscriptionTypeDAOImpl) new DaoFactory().createDao("subscriptionTypeDao");
+			} catch (InvalidValueException e) {
+				LOGGER.error(e.getMessage());
+			}
 		}
 		return INSTANCE;
 	}

@@ -9,7 +9,9 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import by.pvt.heldyieu.dao.AbstractDAO;
+import by.pvt.heldyieu.dao.factory.DaoFactory;
 import by.pvt.heldyieu.entity.Subscription;
+import by.pvt.heldyieu.exception.InvalidValueException;
 
 public class SubscriptionDAOImpl extends AbstractDAO<Subscription, Integer>{
 	
@@ -19,7 +21,7 @@ public class SubscriptionDAOImpl extends AbstractDAO<Subscription, Integer>{
 	private MagazineDAOImpl magazineDao;
 	private SubscriptionTypeDAOImpl subscriptionTypeDao;
 	
-	private SubscriptionDAOImpl() {
+	public SubscriptionDAOImpl() {
 		super("sqlSubscription");
 		LOGGER.info("Initialize resource for SubscriptionDAOImpl and connection to database");
 		userDao = UserDAOImpl.getInstance();
@@ -29,7 +31,11 @@ public class SubscriptionDAOImpl extends AbstractDAO<Subscription, Integer>{
 
 	public static SubscriptionDAOImpl getInstance(){
 		if (INSTANCE == null) {
-			INSTANCE = new SubscriptionDAOImpl();
+			try {
+				INSTANCE = (SubscriptionDAOImpl) new DaoFactory().createDao("subscriptionDao");
+			} catch (InvalidValueException e) {
+				LOGGER.error(e.getMessage());
+			}
 		}
 		return INSTANCE;
 	}
